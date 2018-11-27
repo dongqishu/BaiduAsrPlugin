@@ -26,9 +26,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.BroadcastReceiver;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.media.AudioManager;
 
 /**
  * Created by Blank on 2017-08-24.
@@ -204,7 +201,6 @@ public class BaiduAsrPlugin extends CordovaPlugin {
                     callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK));
                 }
             });
-
         } else if ("finish".equals(action)) {
             callbackContext.success();
         } else if ("registerNotify".equals(action)) {
@@ -214,9 +210,7 @@ public class BaiduAsrPlugin extends CordovaPlugin {
                     registerNotifyCallback(callbackContext);
                 }
             });
-        } else if ("ttsPlay".equals(action))
-
-        {
+        } else if ("ttsPlay".equals(action)) {
             String text = arg_object.getString("text");
             String utteranceId = arg_object.getString("utteranceId");
             mSpeechSynthesizer.speak(text, utteranceId);
