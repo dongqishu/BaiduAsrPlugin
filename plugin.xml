@@ -2,6 +2,9 @@
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-zzl-baiduasr" version="1.0.0">  
   <name>BaiduAsrPlugin</name>  
+  <preference name="APIKEY"/>  
+  <preference name="SECRETKEY"/>  
+  <preference name="BAPPID"/>  
   <js-module name="BaiduAsrPlugin" src="www/BaiduAsrPlugin.js"> 
     <clobbers target="cordova.plugins.BaiduAsrPlugin"/> 
   </js-module>  
@@ -12,9 +15,9 @@
       </feature> 
     </config-file>  
     <config-file target="AndroidManifest.xml" parent="/manifest/application"> 
-      <meta-data android:name="com.baidu.speech.APP_ID" android:value="14929116"/>  
-      <meta-data android:name="com.baidu.speech.API_KEY" android:value="tuooOeOPy34lRUBXdjGVTva8"/>  
-      <meta-data android:name="com.baidu.speech.SECRET_KEY" android:value="EkGIsL54NwFvK5H3ys3bgKn8dq4gVWE0"/>  
+      <meta-data android:name="com.baidu.speech.APP_ID" android:value="$BAPPID"/>  
+      <meta-data android:name="com.baidu.speech.API_KEY" android:value="$APIKEY"/>  
+      <meta-data android:name="com.baidu.speech.SECRET_KEY" android:value="$SECRETKEY"/>  
       <service android:name="com.baidu.speech.VoiceRecognitionService" android:exported="false"/> 
     </config-file>  
     <config-file parent="/*" target="AndroidManifest.xml"> 
@@ -22,18 +25,18 @@
       <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>  
       <uses-permission android:name="android.permission.INTERNET"/>  
       <uses-permission android:name="android.permission.READ_PHONE_STATE"/>  
-      <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+      <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>  
       <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>  
       <uses-permission android:name="android.permission.WRITE_SETTINGS"/>  
       <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>  
-      <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/> 
-      <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-      <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-      <uses-permission android:name="android.permission.BROADCAST_STICKY" />
-      <uses-permission android:name="android.permission.BLUETOOTH" />
-      <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-      <uses-permission android:name="android.permission.READ_CONTACTS" />
-      <uses-permission android:name="android.permission.WAKE_LOCK" />
+      <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>  
+      <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>  
+      <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>  
+      <uses-permission android:name="android.permission.BROADCAST_STICKY"/>  
+      <uses-permission android:name="android.permission.BLUETOOTH"/>  
+      <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>  
+      <uses-permission android:name="android.permission.READ_CONTACTS"/>  
+      <uses-permission android:name="android.permission.WAKE_LOCK"/> 
     </config-file>  
     <source-file src="src/android/BaiduAsrPlugin.java" target-dir="src/cordova-plugin-baiduasr-test/BaiduAsrPlugin"/>  
     <source-file src="libs/bdasr_V3_20180320_9066860.jar" target-dir="libs"/>  
