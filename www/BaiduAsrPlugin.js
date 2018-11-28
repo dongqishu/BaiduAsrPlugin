@@ -1,7 +1,7 @@
 var exec = require('cordova/exec');
 
-exports.begin = function(success, fail) {
-  return cordova.exec(success, fail, 'BaiduAsrPlugin', 'begin', [{}]);
+exports.begin = function(from, success, fail) {
+  return cordova.exec(success, fail, 'BaiduAsrPlugin', 'begin', [{from:from}]);
 };
 exports.stop = function(success, fail) {
   return cordova.exec(success, fail, 'BaiduAsrPlugin', 'stop', [{}]);

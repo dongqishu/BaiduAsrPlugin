@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.media.AudioManager;
 import android.util.Log;
 
 import com.baidu.speech.EventListener;
@@ -39,7 +40,7 @@ public class BaiduAsrPlugin extends CordovaPlugin {
     SpeechSynthesizer mSpeechSynthesizer;
     BroadcastReceiver receiver;
     private CallbackContext bleCallbackContext = null;
-    // AudioManager mAudioManager;
+    AudioManager mAudioManager;
 
     public static CallbackContext getCurrentCallbackContext() {
         return pushContext;
@@ -65,8 +66,7 @@ public class BaiduAsrPlugin extends CordovaPlugin {
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         super.initialize(cordova, webView);
         Context context = this.cordova.getActivity().getApplicationContext();
-        // mAudioManager = (AudioManager)
-        // context.getSystemService(Context.AUDIO_SERVICE);
+        mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         ApplicationInfo applicationInfo = null;
         try {
             applicationInfo = context.getPackageManager().getApplicationInfo(context.getPackageName(),
@@ -183,14 +183,22 @@ public class BaiduAsrPlugin extends CordovaPlugin {
             throws JSONException {
         final JSONObject arg_object = args.getJSONObject(0);
         if ("begin".equals(action)) {
-            cordova.getThreadPool().execute(new Runnable() {
-                public void run() {
-                    // mAudioManager.setBluetoothScoOn(false);
-                    // mAudioManager.stopBluetoothSco();
-                    promptForRecord();
-                    callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK));
+          // from: 1 means bluetooth  0 means phone
+          int from = arg_object.getInt("from");
+          cordova.getThreadPool().execute(new Runnable() {
+              public void run() {
+                if(from == 1){
+                  mAudioManager.setBluetoothScoOn(true);
+                  mAudioManager.startBluetoothSco();
                 }
-            });
+                else{
+                  mAudioManager.setBluetoothScoOn(false);
+                  mAudioManager.stopBluetoothSco();
+                }
+                promptForRecord();
+                callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK));
+              }
+          });
         } else if ("stop".equals(action)) {
             Log.i(TAG, "stop voice");
             // 停止录音
@@ -237,10 +245,10 @@ public class BaiduAsrPlugin extends CordovaPlugin {
             asr = null;
         }
         // removeBleListener();
-        // if (mAudioManager != null) {
-        // mAudioManager.setBluetoothScoOn(false);
-        // mAudioManager.stopBluetoothSco();
-        // }
+         if (mAudioManager != null) {
+         mAudioManager.setBluetoothScoOn(false);
+         mAudioManager.stopBluetoothSco();
+         }
     }
 
     // private void removeBleListener() {
