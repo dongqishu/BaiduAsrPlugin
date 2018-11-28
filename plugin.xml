@@ -38,7 +38,7 @@
       <uses-permission android:name="android.permission.READ_CONTACTS"/>  
       <uses-permission android:name="android.permission.WAKE_LOCK"/> 
     </config-file>  
-    <source-file src="src/android/BaiduAsrPlugin.java" target-dir="src/cordova-plugin-baiduasr/BaiduAsrPlugin"/>  
+    <source-file src="src/android/BaiduAsrPlugin.java" target-dir="src/cordova-plugin-zzl-baiduasr/BaiduAsrPlugin"/>  
     <source-file src="libs/bdasr_V3_20180320_9066860.jar" target-dir="libs"/>  
     <source-file src="libs/com.baidu.tts_2.3.1.20170808_e39ea89.jar" target-dir="libs"/>  
     <source-file src="libs/armeabi/libBaiduSpeechSDK.so" target-dir="libs/armeabi"/>  
