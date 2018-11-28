@@ -169,6 +169,10 @@ public class BaiduAsrPlugin extends CordovaPlugin {
             }
             if (name.equals(SpeechConstant.CALLBACK_EVENT_ASR_FINISH)) {
                 // 识别结束
+              if (mAudioManager != null) {
+                mAudioManager.setBluetoothScoOn(false);
+                mAudioManager.stopBluetoothSco();
+              }
                 sendEvent("asrFinish", "ok");
             }
             if (name.equals(SpeechConstant.CALLBACK_EVENT_ASR_PARTIAL)) {
@@ -246,8 +250,8 @@ public class BaiduAsrPlugin extends CordovaPlugin {
         }
         // removeBleListener();
          if (mAudioManager != null) {
-         mAudioManager.setBluetoothScoOn(false);
-         mAudioManager.stopBluetoothSco();
+           mAudioManager.setBluetoothScoOn(false);
+           mAudioManager.stopBluetoothSco();
          }
     }
 
