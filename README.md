@@ -1,5 +1,9 @@
 # BaiduAsrPlugin
+
 Baidu Asr Plugin
+
+参考https://github.com/rxnh8255/baiduasr
+
 ionic cordova plugin ls
 
 ionic cordova plugin remove cordova-plugin-zzl-baiduasr
