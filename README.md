@@ -33,6 +33,7 @@ constructor(private media: Media) {
           var dataModel = JSON.parse(data.message);
           if (dataModel.result_type == 'final_result') {
             alert(dataModel.best_result);
+            cordova.plugins.BaiduAsrPlugin.finish();
           } else {
             // alert(dataModel.best_result);
           }
