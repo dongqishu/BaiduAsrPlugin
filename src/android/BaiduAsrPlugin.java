@@ -206,10 +206,7 @@ public class BaiduAsrPlugin extends CordovaPlugin {
                 }
             });
         } else if ("finish".equals(action)) {
-            if (null != asr) {
-                asr.unregisterListener(asrListener);
-                asr = null;
-            }
+            removeBleListener();
             callbackContext.success();
         } else if ("registerNotify".equals(action)) {
             pushContext = callbackContext;
@@ -218,8 +215,7 @@ public class BaiduAsrPlugin extends CordovaPlugin {
                     registerNotifyCallback(callbackContext);
                 }
             });
-        } else if ("ttsPlay".equals(action))
-        {
+        } else if ("ttsPlay".equals(action)) {
             String text = arg_object.getString("text");
             String utteranceId = arg_object.getString("utteranceId");
             mSpeechSynthesizer.speak(text, utteranceId);
@@ -242,27 +238,19 @@ public class BaiduAsrPlugin extends CordovaPlugin {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        removeBleListener();
+    }
+
+    private void removeBleListener() {
         if (null != asr) {
             asr.unregisterListener(asrListener);
             asr = null;
         }
-        // removeBleListener();
         if (mAudioManager != null) {
             mAudioManager.setBluetoothScoOn(false);
             mAudioManager.stopBluetoothSco();
         }
     }
-
-    // private void removeBleListener() {
-    // if (this.receiver != null) {
-    // try {
-    // webView.getContext().unregisterReceiver(this.receiver);
-    // this.receiver = null;
-    // } catch (Exception e) {
-    // Log.e(TAG, "Error unregistering ble receiver: " + e.getMessage(), e);
-    // }
-    // }
-    // }
 
     private void sendEvent(String type, String msg) {
         JSONObject response = new JSONObject();
