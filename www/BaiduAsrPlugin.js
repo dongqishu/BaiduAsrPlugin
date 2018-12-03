@@ -6,6 +6,9 @@ exports.begin = function(from, success, fail) {
 exports.stop = function(success, fail) {
   return cordova.exec(success, fail, 'BaiduAsrPlugin', 'stop', [{}]);
 };
+exports.finish = function(success, fail) {
+  return cordova.exec(success, fail, 'BaiduAsrPlugin', 'finish', [{}]);
+};
 exports.registerNotify = function(success, fail) {
   return cordova.exec(success, fail, 'BaiduAsrPlugin', 'registerNotify', [{}]);
 };

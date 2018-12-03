@@ -78,9 +78,6 @@ public class BaiduAsrPlugin extends CordovaPlugin {
         // SpeechUtility.createUtility(context,
         // "appid="+applicationInfo.metaData.getString("com.blanktrack.appid"));
 
-        asr = EventManagerFactory.create(getApplicationContext(), "asr");
-        asr.registerListener(asrListener);
-
         // 初始化TTS
         mSpeechSynthesizer = SpeechSynthesizer.getInstance();
         mSpeechSynthesizer.setContext(getApplicationContext());
@@ -169,10 +166,6 @@ public class BaiduAsrPlugin extends CordovaPlugin {
             }
             if (name.equals(SpeechConstant.CALLBACK_EVENT_ASR_FINISH)) {
                 // 识别结束
-              if (mAudioManager != null) {
-                mAudioManager.setBluetoothScoOn(false);
-                mAudioManager.stopBluetoothSco();
-              }
                 sendEvent("asrFinish", "ok");
             }
             if (name.equals(SpeechConstant.CALLBACK_EVENT_ASR_PARTIAL)) {
@@ -187,33 +180,36 @@ public class BaiduAsrPlugin extends CordovaPlugin {
             throws JSONException {
         final JSONObject arg_object = args.getJSONObject(0);
         if ("begin".equals(action)) {
-          // from: 1 means bluetooth  0 means phone
-          int from = arg_object.getInt("from");
-          cordova.getThreadPool().execute(new Runnable() {
-              public void run() {
-                if(from == 1){
-                  mAudioManager.setBluetoothScoOn(true);
-                  mAudioManager.startBluetoothSco();
+            asr = EventManagerFactory.create(getApplicationContext(), "asr");
+            asr.registerListener(asrListener);
+            int from = arg_object.getInt("from");
+            cordova.getThreadPool().execute(new Runnable() {
+                public void run() {
+                    if (from == 1) {
+                        mAudioManager.setBluetoothScoOn(true);
+                        mAudioManager.startBluetoothSco();
+                    } else {
+                        mAudioManager.setBluetoothScoOn(false);
+                        mAudioManager.stopBluetoothSco();
+                    }
+                    promptForRecord();
+                    callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK));
                 }
-                else{
-                  mAudioManager.setBluetoothScoOn(false);
-                  mAudioManager.stopBluetoothSco();
-                }
-                promptForRecord();
-                callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK));
-              }
-          });
+            });
         } else if ("stop".equals(action)) {
             Log.i(TAG, "stop voice");
             // 停止录音
             cordova.getThreadPool().execute(new Runnable() {
-
                 public void run() {
                     asr.send(SpeechConstant.ASR_STOP, null, null, 0, 0);
                     callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK));
                 }
             });
         } else if ("finish".equals(action)) {
+            if (null != asr) {
+                asr.unregisterListener(asrListener);
+                asr = null;
+            }
             callbackContext.success();
         } else if ("registerNotify".equals(action)) {
             pushContext = callbackContext;
@@ -222,7 +218,8 @@ public class BaiduAsrPlugin extends CordovaPlugin {
                     registerNotifyCallback(callbackContext);
                 }
             });
-        } else if ("ttsPlay".equals(action)) {
+        } else if ("ttsPlay".equals(action))
+        {
             String text = arg_object.getString("text");
             String utteranceId = arg_object.getString("utteranceId");
             mSpeechSynthesizer.speak(text, utteranceId);
@@ -246,13 +243,14 @@ public class BaiduAsrPlugin extends CordovaPlugin {
     public void onDestroy() {
         super.onDestroy();
         if (null != asr) {
+            asr.unregisterListener(asrListener);
             asr = null;
         }
         // removeBleListener();
-         if (mAudioManager != null) {
-           mAudioManager.setBluetoothScoOn(false);
-           mAudioManager.stopBluetoothSco();
-         }
+        if (mAudioManager != null) {
+            mAudioManager.setBluetoothScoOn(false);
+            mAudioManager.stopBluetoothSco();
+        }
     }
 
     // private void removeBleListener() {
